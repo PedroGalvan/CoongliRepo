@@ -1,67 +1,100 @@
 package com.coongli.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
+import com.coongli.domain.Actor;
+import com.coongli.domain.Mesage;
 import com.coongli.domain.Messagefolder;
 import com.coongli.repository.MessagefolderRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
 
-/**
- * Service Implementation for managing Messagefolder.
- */
+
 @Service
 @Transactional
 public class MessagefolderService {
+	
+	//Managed repository -----------------------------------------------------
+	
+	@Autowired
+	private MessagefolderRepository messageFolderRepository;
+	
+	// Supporting services -----------------------------------------------------
 
-    private final Logger log = LoggerFactory.getLogger(MessagefolderService.class);
-    
-    @Inject
-    private MessagefolderRepository messagefolderRepository;
-    
-    /**
-     * Save a messagefolder.
-     * @return the persisted entity
-     */
-    public Messagefolder save(Messagefolder messagefolder) {
-        log.debug("Request to save Messagefolder : {}", messagefolder);
-        Messagefolder result = messagefolderRepository.save(messagefolder);
-        return result;
-    }
+	// Constructor -----------------------------------------------------
+	
+	public MessagefolderService(){
+		super();
+	}
+		
+	// Simple CRUD methods -----------------------------------------------------
+	
+	public Messagefolder findOne(int messageFolderId){
+		Assert.notNull(messageFolderId);
+		Messagefolder result;
+		
+		result = messageFolderRepository.findOne(messageFolderId);
+		
+		return result;
+	}
+	
+	public Messagefolder create(String name){
+		Messagefolder result;
+		Collection<Mesage> mesages;
+		
+		mesages = new ArrayList<Mesage>();
+		result = new Messagefolder();
+		result.setName(name);
+		result.setMesages(mesages);
+				
+		return result;
+	}
+	
+	public Messagefolder save(Messagefolder messageFolder){
+		Assert.notNull(messageFolder);
+		Messagefolder result;
 
-    /**
-     *  get all the messagefolders.
-     *  @return the list of entities
-     */
-    @Transactional(readOnly = true) 
-    public Page<Messagefolder> findAll(Pageable pageable) {
-        log.debug("Request to get all Messagefolders");
-        Page<Messagefolder> result = messagefolderRepository.findAll(pageable); 
-        return result;
-    }
+		result = messageFolderRepository.save(messageFolder);
+		
+		return result;
+	}
+	
+	// Other business methods -----------------------------------------------------
 
-    /**
-     *  get one messagefolder by id.
-     *  @return the entity
-     */
-    @Transactional(readOnly = true) 
-    public Messagefolder findOne(Long id) {
-        log.debug("Request to get Messagefolder : {}", id);
-        Messagefolder messagefolder = messagefolderRepository.findOne(id);
-        return messagefolder;
-    }
-
-    /**
-     *  delete the  messagefolder by id.
-     */
-    public void delete(Long id) {
-        log.debug("Request to delete Messagefolder : {}", id);
-        messagefolderRepository.delete(id);
-    }
+	public Messagefolder getTrashbox(Actor actor){
+		Messagefolder result;
+		
+		result = null;
+		for(Messagefolder messageFolder: actor.getMessagefolders()){
+			if(messageFolder.getName().equals("Trashbox")){
+				result = messageFolder;
+				break;
+			}
+			
+		}
+		Assert.notNull(result);
+		return result;
+	}
+	
+	public Messagefolder findOneByName(String name,Actor a){
+		Assert.notNull(name);
+		Messagefolder result;
+		
+		result = null;
+		for(Messagefolder mf:a.getMessagefolders()){
+			if(mf.getName().equals(name)){
+				result = mf;
+				break;
+			}
+			
+		}
+		Assert.notNull(result);
+		return result;
+	}
 }

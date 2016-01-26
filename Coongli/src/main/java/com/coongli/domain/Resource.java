@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -46,7 +46,7 @@ public class Resource implements Serializable {
    	@Temporal(TemporalType.TIMESTAMP)
    	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     @Column(name = "creationmoment", nullable = false)
-    private LocalDate creationmoment;
+    private Date creationmoment;
     
     @Column(name = "invoicereport")
     private Boolean invoicereport;
@@ -100,11 +100,11 @@ public class Resource implements Serializable {
         this.doctype = doctype;
     }
     
-    public LocalDate getCreationmoment() {
+    public Date getCreationmoment() {
         return creationmoment;
     }
     
-    public void setCreationmoment(LocalDate creationmoment) {
+    public void setCreationmoment(Date creationmoment) {
         this.creationmoment = creationmoment;
     }
 

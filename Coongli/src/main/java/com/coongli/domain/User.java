@@ -11,9 +11,11 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 /**
@@ -65,7 +67,7 @@ public class User extends Actor implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
     @Column(name = "birthdate", nullable = false)
-    private LocalDate birthdate;
+    private Date birthdate;
     
     @Size(max = 50)
     @Column(name = "first_name", length = 50)
@@ -111,6 +113,41 @@ public class User extends Actor implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     private Set<PersistentToken> persistentTokens = new HashSet<>();
 
+    @NotNull
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Collection<Invoice> invoices = new ArrayList<>();
+    
+    @NotNull
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Collection<Action> actions = new ArrayList<>();
+    
+    @NotNull
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Collection<Goal> goals = new ArrayList<>();
+    
+    @NotNull
+    @ManyToMany(mappedBy = "users")
+    @JsonIgnore
+    private Collection<Session> sessions = new ArrayList<>();
+    
+    @NotNull
+    @OneToMany(mappedBy = "sender")
+    @JsonIgnore
+    private Collection<Invitation> sentinvitations = new ArrayList<>();
+    
+    @NotNull
+    @OneToMany(mappedBy = "recipient")
+    @JsonIgnore
+    private Collection<Invitation> receivedinvitations = new ArrayList<>();
+    
+    @NotNull
+    @ManyToMany(mappedBy = "users")
+    @JsonIgnore
+    private Collection<Resourcecategory> resourcecategories = new ArrayList<>();
+    
     public Long getId() {
         return id;
     }
@@ -167,11 +204,11 @@ public class User extends Actor implements Serializable {
         this.nationality = nationality;
     }
     
-    public LocalDate getBirthdate() {
+    public Date getBirthdate() {
         return birthdate;
     }
     
-    public void setBirthdate(LocalDate birthdate) {
+    public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
     }
     
@@ -253,6 +290,62 @@ public class User extends Actor implements Serializable {
 
     public void setPersistentTokens(Set<PersistentToken> persistentTokens) {
         this.persistentTokens = persistentTokens;
+    }
+    
+    public Collection<Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(Collection<Action> actions) {
+        this.actions = actions;
+    }
+    
+    public Collection<Goal> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(Collection<Goal> goals) {
+        this.goals = goals;
+    }
+    
+    public Collection<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(Collection<Invoice> invoices) {
+        this.invoices = invoices;
+    }
+    
+    public Collection<Session> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(Collection<Session> sessions) {
+        this.sessions = sessions;
+    }
+    
+    public Collection<Invitation> getSentinvitations() {
+        return sentinvitations;
+    }
+
+    public void setSentinvitations(Collection<Invitation> sentinvitations) {
+        this.sentinvitations = sentinvitations;
+    }
+    
+    public Collection<Invitation> getReceivedinvitations() {
+        return receivedinvitations;
+    }
+
+    public void setReceivedinvitations(Collection<Invitation> receivedinvitations) {
+        this.receivedinvitations = receivedinvitations;
+    }
+    
+    public Collection<Resourcecategory> getResourcecategories() {
+        return resourcecategories;
+    }
+
+    public void setResourcecategories(Collection<Resourcecategory> resourcecategories) {
+        this.resourcecategories = resourcecategories;
     }
 
     @Override

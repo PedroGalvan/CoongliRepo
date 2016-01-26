@@ -1,14 +1,15 @@
 package com.coongli.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
 import com.coongli.domain.Adminis;
 
-import org.springframework.data.jpa.repository.*;
 
-import java.util.List;
+@Repository
+public interface AdminisRepository extends JpaRepository<Adminis, Integer>{
 
-/**
- * Spring Data JPA repository for the Adminis entity.
- */
-public interface AdminisRepository extends JpaRepository<Adminis,Long> {
-
+	@Query("select a from Adminis a where a.userAccount.id=?1")
+	Adminis findOneByPrincipal(int id);
 }

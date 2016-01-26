@@ -1,67 +1,134 @@
 package com.coongli.service;
 
-import com.coongli.domain.Actionplan;
-import com.coongli.repository.ActionplanRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.Collection;
+import java.util.Date;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
+import com.coongli.domain.Actionplan;
+import com.coongli.security.Authority;
+import com.coongli.domain.Resourcecategory;
+import com.coongli.domain.User;
+import com.coongli.repository.ActionplanRepository;
+import com.coongli.security.LoginService;
+import com.coongli.security.UserAccount;
 
-/**
- * Service Implementation for managing Actionplan.
- */
+
+
 @Service
 @Transactional
 public class ActionplanService {
 
-    private final Logger log = LoggerFactory.getLogger(ActionplanService.class);
-    
-    @Inject
-    private ActionplanRepository actionplanRepository;
-    
-    /**
-     * Save a actionplan.
-     * @return the persisted entity
-     */
-    public Actionplan save(Actionplan actionplan) {
-        log.debug("Request to save Actionplan : {}", actionplan);
-        Actionplan result = actionplanRepository.save(actionplan);
-        return result;
-    }
+	// Managed repository -------------------------------------------------------
+	@Autowired		
+	private ActionplanRepository actionPlanRepository;
+	
+	// Supporting services ------------------------------------------------------
+	
+	@Autowired		
+	private UserService userService;
+	
+	@Autowired		
+	private ResourcecategoryService resourceCategoryService;
+	
+	// Simpled CRUD methods -----------------------------------------------------
+	
+	public Actionplan create(){
+		Actionplan result;
+		User user;
+		Resourcecategory resourceCategory;
+		
+		user = userService.findOneByPrincipal();
+		result= new Actionplan();
+		resourceCategory = resourceCategoryService.findPlanes();
+		result.setResourcecategory(resourceCategory);
+		result.setCreationmoment(new Date(System.currentTimeMillis()-1));
+		result.setInvoicereport(true);
+		result.setOwner(user);
+		return result;
+	}
+	
+	public Actionplan save(Actionplan actionPlan){
+		Assert.notNull(actionPlan);
+		Actionplan result;
+		User user;
+		
+		user = userService.findOneByPrincipal();
+		Assert.isTrue(actionPlan.getOwner().equals(user));
+		actionPlan.setCreationmoment(new Date(System.currentTimeMillis() -1));
+		
+		result = actionPlanRepository.save(actionPlan);
+		deleteRest(result);
+		return result;
+	}
+	
+	public Actionplan findOne(int actionPlanId){
+		Actionplan result;
+		
+		result  = actionPlanRepository.findOne(actionPlanId);
+		
+		return result;
+	}
+	
+	public Collection<Actionplan> findAll(){
+		Collection<Actionplan> result;
+		
+		result  = actionPlanRepository.findAll();
+		
+		return result;
+	}
+	
+	public void delete(Actionplan actionPlan){
+		Assert.notNull(actionPlan);
+		actionPlanRepository.delete(actionPlan);
+	}
+	
+	//Other business methods ------------------------------------------------
+	
+	public void deleteRest(Actionplan actionPlan){
+		Assert.notNull(actionPlan);
+		Collection<Actionplan> plans;
+		User user;
+		
+		user = userService.findOneByPrincipal();
+		plans  = actionPlanRepository.findAllPlansByUser(user.getId());
+		for(Actionplan ap:plans){
+			if(!ap.equals(actionPlan))
+				delete(ap);
+		}
+		
+	}
+	
+	public Actionplan findPlanByUser(){
+		Actionplan result;
+		User user;
+		
+		user = userService.findOneByPrincipal();
+		result = actionPlanRepository.findPlanByUser(user.getId());
+		
+		return result;
+	}
+	
+	public Actionplan findPlanByUserId(int userId){
+		Actionplan result;
+		
+		result = actionPlanRepository.findPlanByUser(userId);
+		
+		return result;
+	}
+	
+	public void checkIsAdmin(){
+		UserAccount principal;
+		Authority a;
+		a = new Authority();
+		a.setAuthority("ADMIN");
+		principal = LoginService.getPrincipal();			
+		
+		Assert.isTrue(principal.getAuthorities().contains(a));
+	}
 
-    /**
-     *  get all the actionplans.
-     *  @return the list of entities
-     */
-    @Transactional(readOnly = true) 
-    public Page<Actionplan> findAll(Pageable pageable) {
-        log.debug("Request to get all Actionplans");
-        Page<Actionplan> result = actionplanRepository.findAll(pageable); 
-        return result;
-    }
-
-    /**
-     *  get one actionplan by id.
-     *  @return the entity
-     */
-    @Transactional(readOnly = true) 
-    public Actionplan findOne(Long id) {
-        log.debug("Request to get Actionplan : {}", id);
-        Actionplan actionplan = actionplanRepository.findOne(id);
-        return actionplan;
-    }
-
-    /**
-     *  delete the  actionplan by id.
-     */
-    public void delete(Long id) {
-        log.debug("Request to delete Actionplan : {}", id);
-        actionplanRepository.delete(id);
-    }
 }

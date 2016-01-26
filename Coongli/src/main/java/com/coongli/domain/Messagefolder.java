@@ -8,6 +8,8 @@ import javax.validation.constraints.*;
 import org.hibernate.validator.constraints.SafeHtml;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -36,7 +38,7 @@ public class Messagefolder implements Serializable {
     @NotNull
     @OneToMany(mappedBy = "messagefolder")
     @JsonIgnore
-    private Set<Mesage> mesages = new HashSet<>();
+    private Collection<Mesage> mesages = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -62,11 +64,11 @@ public class Messagefolder implements Serializable {
         this.actor = actor;
     }
 
-    public Set<Mesage> getMesagess() {
+    public Collection<Mesage> getMesages() {
         return mesages;
     }
 
-    public void setMessages(Set<Mesage> mesages) {
+    public void setMesages(Collection<Mesage> mesages) {
         this.mesages = mesages;
     }
 

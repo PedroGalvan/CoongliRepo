@@ -1,67 +1,264 @@
 package com.coongli.service;
 
-import com.coongli.domain.Mesage;
-import com.coongli.repository.MesageRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
+import com.coongli.domain.Actor;
+import com.coongli.domain.Mesage;
+import com.coongli.domain.Messagefolder;
+import com.coongli.repository.MesageRepository;
+import com.coongli.security.LoginService;
+import com.coongli.security.UserAccount;
 
-/**
- * Service Implementation for managing Mesage.
- */
+
 @Service
 @Transactional
 public class MesageService {
 
-    private final Logger log = LoggerFactory.getLogger(MesageService.class);
-    
-    @Inject
-    private MesageRepository mesageRepository;
-    
-    /**
-     * Save a mesage.
-     * @return the persisted entity
-     */
-    public Mesage save(Mesage mesage) {
-        log.debug("Request to save Mesage : {}", mesage);
-        Mesage result = mesageRepository.save(mesage);
-        return result;
-    }
+	// Managed repository -------------------------------------------------------
+	@Autowired		
+	private MesageRepository mesageRepository;
+	
+	// Supporting services ------------------------------------------------------
+	@Autowired
+	private ActorService actorService;
 
-    /**
-     *  get all the mesages.
-     *  @return the list of entities
-     */
-    @Transactional(readOnly = true) 
-    public Page<Mesage> findAll(Pageable pageable) {
-        log.debug("Request to get all Mesages");
-        Page<Mesage> result = mesageRepository.findAll(pageable); 
-        return result;
-    }
+	@Autowired
+	private MessagefolderService messageFolderService;
+	
+	// Simpled CRUD methods -----------------------------------------------------
+	
+	public Mesage create(){
+		Mesage result;
+		Actor a,recipient;
+		Messagefolder outbox;
 
-    /**
-     *  get one mesage by id.
-     *  @return the entity
-     */
-    @Transactional(readOnly = true) 
-    public Mesage findOne(Long id) {
-        log.debug("Request to get Mesage : {}", id);
-        Mesage mesage = mesageRepository.findOne(id);
-        return mesage;
-    }
+		result= new Mesage();
+		a = actorService.findOneByPrincipal();
+		recipient = null;
+		outbox = messageFolderService.findOneByName("Outbox",a);
+		result.setSentmoment(new Date(System.currentTimeMillis()-1));
+		result.setMessagefolder(outbox);
+		result.setSender(a);
+		result.setBody("");
+		result.setRecipient(recipient);
+		result.setSubject("");
+		result.setSaw(true);
+		
+		return result;
+	}
+	
+	public Mesage save(Mesage m){
+		Assert.notNull(m);
+		Mesage result;
+		Collection<Mesage> mesages;
+		Actor aSender,aRecipient;
+		Messagefolder outbox,inbox;
+		
+		
+		if(m.getId()==0){
+			
+		aSender = actorService.findOneByPrincipal();
+		aRecipient = m.getRecipient();
+		outbox = messageFolderService.findOneByName("Outbox",aSender);
+		inbox = messageFolderService.findOneByName("Inbox",aRecipient);
+		m.setSentmoment(new Date(System.currentTimeMillis() -1));
+		
+		mesages = aSender.getSentmesages();
+		mesages.add(m);
+		aSender.setSentmesages(mesages);
 
-    /**
-     *  delete the  mesage by id.
-     */
-    public void delete(Long id) {
-        log.debug("Request to delete Mesage : {}", id);
-        mesageRepository.delete(id);
-    }
+		mesages = aRecipient.getReceivedmesages();
+		mesages.add(m);
+		aRecipient.setReceivedmesages(mesages);
+		
+		mesages = outbox.getMesages();
+		mesages.add(m);
+		outbox.setMesages(mesages);
+		
+		mesages = inbox.getMesages();
+		mesages.add(m);
+		inbox.setMesages(mesages);
+		
+		Assert.isTrue(!m.getSender().equals(m.getRecipient()));
+		
+		messageFolderService.save(outbox);
+		messageFolderService.save(inbox);
+		result = mesageRepository.save(m);
+		
+		m.setMessagefolder(inbox);
+		m.setSaw(false);
+		result = mesageRepository.save(m);
+		
+		}else{
+			
+			result = mesageRepository.save(m);
+		
+		}
+		return result;
+	}
+	
+	public Mesage findOne(int mesId){
+		Mesage result;
+		
+		result  = mesageRepository.findOne(mesId);
+		
+		return result;
+	}
+	
+	public Collection<Mesage> findAll(){
+		Collection<Mesage> result;
+		
+		result  = mesageRepository.findAll();
+		
+		return result;
+	}
+	
+	public void delete(Mesage mesage){
+		Assert.notNull(mesage);
+		//checkIsOwner(mesage);	
+		Assert.isTrue(mesage.getMessagefolder().getName().equals("Trashbox"));
+		
+		mesageRepository.delete(mesage);
+	}
+	
+	//Other business methods ------------------------------------------------
+	
+	public void changeSaw(Mesage m){
+		Assert.notNull(m);
+		
+		if(!m.getSaw()){
+			m.setSaw(true);
+			//save(m);
+		}
+		
+	}
+	
+	public void sendAcceptInfo(Actor actor, Date date1){
+		Mesage mesage;
+		Messagefolder inbox;
+		Actor sender;
+		Collection<Mesage> mesages;
+		String minuts;
+		
+		sender = actorService.findOneByPrincipal();
+		inbox = messageFolderService.findOneByName("Inbox",actor);
+		mesage = new Mesage();
+		mesage.setRecipient(actor);
+		if(date1.getMinutes()<10){
+			minuts = "0" + date1.getMinutes();
+		}else{
+			minuts = ""+date1.getMinutes();
+		}
+		mesage.setBody("Your session on "+date1.getDate()+"/"+(date1.getMonth()+1)+"/"+(date1.getYear()+1900)+" "+date1.getHours()+":"+minuts+" has been confirmed.");
+		mesage.setSubject("Session "+date1.getDate()+"/"+(date1.getMonth()+1)+"/"+(date1.getYear()+1900)+" Accepted");
+		mesage.setSender(sender);
+		mesage.setSentmoment(new Date(System.currentTimeMillis()-1));
+		mesages = actor.getReceivedmesages();
+		mesages.add(mesage);
+		actor.setReceivedmesages(mesages);
+		
+		mesages = inbox.getMesages();
+		mesages.add(mesage);
+		inbox.setMesages(mesages);
+		
+		messageFolderService.save(inbox);
+		mesage.setMessagefolder(inbox);
+		mesageRepository.save(mesage);
+		
+	}
+	public void sendCancelInfo(Actor actor, Date date1, Date date2){
+		Mesage mesage;
+		Messagefolder inbox;
+		Actor sender;
+		Collection<Mesage> mesages;
+		
+		sender = actorService.findOneByPrincipal();
+		inbox = messageFolderService.findOneByName("Inbox",actor);
+		mesage = new Mesage();
+		mesage.setRecipient(actor);
+		mesage.setBody("A future session programmed between the days "+ date1.getDate()+"/"+(date1.getMonth()+1)+"/"+(date1.getYear()+1900)+
+				" and "+ date2.getDate()+"/"+(date2.getMonth()+1)+"/"+(date2.getYear()+1900)+" has been cancelled.");
+		mesage.setSubject("Future Sessions Cancelled");
+		mesage.setSender(sender);
+		mesage.setSentmoment(new Date(System.currentTimeMillis()-1));
+		mesages = actor.getReceivedmesages();
+		mesages.add(mesage);
+		actor.setReceivedmesages(mesages);
+		
+		mesages = inbox.getMesages();
+		mesages.add(mesage);
+		inbox.setMesages(mesages);
+		
+		messageFolderService.save(inbox);
+		mesage.setMessagefolder(inbox);
+		mesageRepository.save(mesage);
+		
+	}
+	
+	public Collection<Mesage> findMesageByMFOrder(int messageFolderId){
+		Assert.notNull(messageFolderId);
+		Collection<Mesage> result;
+		
+		result = mesageRepository.findMesageByMFOrder(messageFolderId);
+		if(result==null){
+			result = new ArrayList<Mesage>();
+		}
+		return result;
+	}
+	
+	public void moveToTrashbox(Mesage mesage) {
+		Assert.notNull(mesage);
+		Collection<Mesage> mesages;
+		Messagefolder messageFolder;
+		
+		messageFolder = messageFolderService.getTrashbox(mesage.getMessagefolder().getActor());
+		mesages = messageFolder.getMesages();
+		mesage.setMessagefolder(messageFolder);
+		mesages.add(mesage);
+		messageFolder.setMesages(mesages);
+		
+		//save(mesage);
+		
+	}
+
+	public Mesage replyMesage(Mesage aEnviar, Mesage aResponder){
+		Assert.notNull(aResponder);
+		Assert.notNull(aEnviar);
+		Assert.isTrue(!aEnviar.getSender().equals(aResponder.getSender()));
+		Mesage result;
+		Actor ac;
+		String subject;
+		
+		result = aEnviar;
+		ac = aResponder.getSender();
+		
+		if(aResponder.getSubject().contains("RES[")){
+			subject = aResponder.getSubject();
+		}else{
+		subject = "RES["+aResponder.getSubject()+"]";
+		}
+		
+		result.setRecipient(ac);
+		result.setSubject(subject);
+		return result;
+	}
+
+	public void checkIsOwner(Mesage mesage){
+		UserAccount principal;
+		UserAccount owner;
+		
+		principal = LoginService.getPrincipal();			
+		owner = mesage.getMessagefolder().getActor().getUserAccount();
+		
+		Assert.isTrue(principal.equals(owner));
+	}
+
 }

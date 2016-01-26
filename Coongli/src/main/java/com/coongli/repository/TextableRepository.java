@@ -1,14 +1,12 @@
 package com.coongli.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import com.coongli.domain.Textable;
 
-import org.springframework.data.jpa.repository.*;
 
-import java.util.List;
-
-/**
- * Spring Data JPA repository for the Textable entity.
- */
-public interface TextableRepository extends JpaRepository<Textable,Long> {
+@Repository
+public interface TextableRepository extends JpaRepository<Textable, Integer > {
 
 }

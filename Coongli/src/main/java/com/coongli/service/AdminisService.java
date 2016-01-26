@@ -1,65 +1,147 @@
 package com.coongli.service;
 
-import com.coongli.domain.Adminis;
-import com.coongli.repository.AdminisRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
+import com.coongli.domain.Adminis;
+import com.coongli.security.Authority;
+import com.coongli.security.LoginService;
+import com.coongli.domain.Mesage;
+import com.coongli.domain.Messagefolder;
+import com.coongli.repository.AdminisRepository;
+import com.coongli.security.UserAccount;
 
-/**
- * Service Implementation for managing Adminis.
- */
+
+
 @Service
 @Transactional
 public class AdminisService {
 
-    private final Logger log = LoggerFactory.getLogger(AdminisService.class);
-    
-    @Inject
-    private AdminisRepository adminisRepository;
-    
-    /**
-     * Save a adminis.
-     * @return the persisted entity
-     */
-    public Adminis save(Adminis adminis) {
-        log.debug("Request to save Adminis : {}", adminis);
-        Adminis result = adminisRepository.save(adminis);
-        return result;
-    }
+	//Managed repository -----------------------------------------------------
+	
+	@Autowired
+	private AdminisRepository adminRepository;
+	
+	// Supporting services -----------------------------------------------------
 
-    /**
-     *  get all the adminiss.
-     *  @return the list of entities
-     */
-    @Transactional(readOnly = true) 
-    public List<Adminis> findAll() {
-        log.debug("Request to get all Adminiss");
-        List<Adminis> result = adminisRepository.findAll();
-        return result;
-    }
+	@Autowired		
+	private MessagefolderService messageFolderService;
+	// Constructor -----------------------------------------------------
+	
+	public AdminisService(){
+		super();
+	}
+	
+	// Simple CRUD methods -----------------------------------------------------
+	
+	public Adminis create(){
+		Adminis result;
+	    UserAccount userAccount;
+	    Authority authority;
+	    Collection<Authority> authorities;
+	    Collection<Messagefolder> messageFolders;
+		Collection<Mesage> receivedMesages;
+		Collection<Mesage> sentMesages;
+		
+		messageFolders = new ArrayList<Messagefolder>();
+		receivedMesages = new ArrayList<Mesage>();
+		sentMesages = new ArrayList<Mesage>();
+	    authority = new Authority();
+		authorities = new ArrayList<Authority>();
+		userAccount = new UserAccount();
+		result = new Adminis();
+		
+		authority.setAuthority(Authority.ADMIN);
+		authorities.add(authority);
+		userAccount.setAuthorities(authorities);
+		result.setUserAccount(userAccount);
+		result.setMessagefolders(messageFolders);
+		result.setSentmesages(sentMesages);
+		result.setReceivedmesages(receivedMesages);
 
-    /**
-     *  get one adminis by id.
-     *  @return the entity
-     */
-    @Transactional(readOnly = true) 
-    public Adminis findOne(Long id) {
-        log.debug("Request to get Adminis : {}", id);
-        Adminis adminis = adminisRepository.findOne(id);
-        return adminis;
-    }
+		return result;
+	}
+	
+	public Adminis save(Adminis admin){
+		Assert.notNull(admin);
+		
+		Authority authority;
+		authority = new Authority();
+		authority.setAuthority("ADMIN");
+		Assert.isTrue(LoginService.getPrincipal().getAuthorities().contains(authority));
+		
+		Adminis result;
+		Md5PasswordEncoder encoder;
+		String password;
+		String repeatPassword;
+		UserAccount userAccount;
+		Collection<Messagefolder> messageFolders;
+		Messagefolder inbox, outbox, trashbox;
+		
+	    
+		messageFolders = new ArrayList<Messagefolder>();
+		inbox = messageFolderService.create("Inbox");
+		outbox = messageFolderService.create("Outbox");
+		trashbox = messageFolderService.create("Trashbox");
+		messageFolders.add(inbox);
+		messageFolders.add(outbox);
+		messageFolders.add(trashbox);
+		admin.setMessagefolders(messageFolders);
+		
+		userAccount = admin.getUserAccount();
+		encoder = new Md5PasswordEncoder();
+		password = encoder.encodePassword(userAccount.getPassword(), null);				
+		repeatPassword = encoder.encodePassword(userAccount.getRepeatPassword(), null);
+		
+		Assert.isTrue(password.equals(repeatPassword)); 
+		
+		userAccount.setPassword(password);
+		userAccount.setRepeatPassword(repeatPassword);
+				
+		admin.setUserAccount(userAccount);	
+		
+		result = adminRepository.save(admin);
+		inbox.setActor(result);
+		outbox.setActor(result);
+		trashbox.setActor(result);
+		messageFolderService.save(inbox);
+		messageFolderService.save(outbox);
+		messageFolderService.save(trashbox);
+		
+		return result;
+	}
 
-    /**
-     *  delete the  adminis by id.
-     */
-    public void delete(Long id) {
-        log.debug("Request to delete Adminis : {}", id);
-        adminisRepository.delete(id);
-    }
+	public Adminis findOne(Integer adminId) {
+		Assert.notNull(adminId);
+		Adminis result;
+		
+		result = adminRepository.findOne(adminId);
+		
+		return result;
+	}
+	
+	public Collection<Adminis> findAll(){
+		Collection<Adminis> result;
+		
+		result = adminRepository.findAll();
+		
+		return result;
+	}
+	// Other business methods -----------------------------------------------------
+/*	
+	public Adminis findOneByPrincipal(){
+		Adminis result;
+		
+		result = adminRepository.findOneByPrincipal(LoginService.getPrincipal().getId());
+				
+		return result;
+	}
+*/
 }

@@ -1,21 +1,21 @@
 package com.coongli.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
 import com.coongli.domain.Resourcecategory;
 
-import org.springframework.data.jpa.repository.*;
-import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+@Repository
+public interface ResourcecategoryRepository extends JpaRepository<Resourcecategory, Integer>{
 
-/**
- * Spring Data JPA repository for the Resourcecategory entity.
- */
-public interface ResourcecategoryRepository extends JpaRepository<Resourcecategory,Long> {
-
-    @Query("select distinct resourcecategory from Resourcecategory resourcecategory left join fetch resourcecategory.userss")
-    List<Resourcecategory> findAllWithEagerRelationships();
-
-    @Query("select resourcecategory from Resourcecategory resourcecategory left join fetch resourcecategory.userss where resourcecategory.id =:id")
-    Resourcecategory findOneWithEagerRelationships(@Param("id") Long id);
-
+	@Query("select distinct rc from Resourcecategory rc where rc.name = 'Invoices'")
+	Resourcecategory findInvoice();
+	
+	@Query("select distinct rc from Resourcecategory rc where rc.name = 'ActionPlans'")
+	Resourcecategory findPlanes();
+	
+	@Query("select distinct rc from Resourcecategory rc where rc.name = 'Reports'")
+	Resourcecategory findReport();
 }

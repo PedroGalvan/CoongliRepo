@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "invoice")
-public class Invoice implements Serializable {
+public class Invoice extends Resource implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

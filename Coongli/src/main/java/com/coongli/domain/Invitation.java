@@ -1,6 +1,5 @@
 package com.coongli.domain;
 
-import java.time.LocalDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -9,6 +8,7 @@ import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -45,7 +45,7 @@ public class Invitation implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     @Column(name = "creationmoment", nullable = false)
-    private LocalDate creationmoment;
+    private Date creationmoment;
     
     @NotNull
     @ManyToOne
@@ -102,11 +102,11 @@ public class Invitation implements Serializable {
         this.rejected = rejected;
     }
 
-    public LocalDate getCreationmoment() {
+    public Date getCreationmoment() {
         return creationmoment;
     }
     
-    public void setCreationmoment(LocalDate creationmoment) {
+    public void setCreationmoment(Date creationmoment) {
         this.creationmoment = creationmoment;
     }
 

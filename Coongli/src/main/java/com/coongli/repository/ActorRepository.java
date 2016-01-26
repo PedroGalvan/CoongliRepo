@@ -1,14 +1,20 @@
 package com.coongli.repository;
 
+import java.util.Collection;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
 import com.coongli.domain.Actor;
 
-import org.springframework.data.jpa.repository.*;
 
-import java.util.List;
+@Repository
+public interface ActorRepository extends JpaRepository<Actor, Integer > {
 
-/**
- * Spring Data JPA repository for the Actor entity.
- */
-public interface ActorRepository extends JpaRepository<Actor,Long> {
-
+	@Query("select a from Actor a where a.userAccount.id=?1")
+	Actor findOneByPrincipal(int id);
+	
+	@Query("select a from Actor a where a.userAccount.id!=?1")
+	Collection<Actor> findAllExceptMe(int userAccountId);
 }

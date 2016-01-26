@@ -1,67 +1,70 @@
 package com.coongli.service;
 
+import java.util.Collection;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
 import com.coongli.domain.Actor;
 import com.coongli.repository.ActorRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.stereotype.Service;
+import com.coongli.security.LoginService;
 
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
-
-/**
- * Service Implementation for managing Actor.
- */
 @Service
 @Transactional
 public class ActorService {
+	
+	//Managed repository -----------------------------------------------------
+	
+	@Autowired
+	private ActorRepository actorRepository;
+	
+	// Supporting services -----------------------------------------------------
+	
+	// Constructor -----------------------------------------------------
+	
+	public ActorService(){
+		super();
+	}
+	
+	// Simple CRUD methods -----------------------------------------------------
+	
+	public Collection<Actor> findAll(){
+		Collection<Actor> result;
+		
+		result = actorRepository.findAll();
+		
+		return result;
+	}
+	
+	public Actor findOne(int actorid){
+		Assert.notNull(actorid);
+		Actor result;
+		
+		result = actorRepository.findOne(actorid);
+		
+		return result;
+	}
 
-    private final Logger log = LoggerFactory.getLogger(ActorService.class);
-    
-    @Inject
-    private ActorRepository actorRepository;
-    
-    /**
-     * Save a actor.
-     * @return the persisted entity
-     */
-    public Actor save(Actor actor) {
-        log.debug("Request to save Actor : {}", actor);
-        Actor result = actorRepository.save(actor);
-        return result;
-    }
+	public Actor findOneByPrincipal(){
+		Actor result;
+		
+		result = actorRepository.findOneByPrincipal(LoginService.getPrincipal().getId());
+		
+		return result;
+	}
 
-    /**
-     *  get all the actors.
-     *  @return the list of entities
-     */
-    @Transactional(readOnly = true) 
-    public Page<Actor> findAll(Pageable pageable) {
-        log.debug("Request to get all Actors");
-        Page<Actor> result = actorRepository.findAll(pageable); 
-        return result;
-    }
+	public Collection<Actor> findAllExceptMe() {
+		Collection<Actor> result;
+		
+		result = actorRepository.findAllExceptMe(LoginService.getPrincipal().getId());
+		
+		return result;
+	}
 
-    /**
-     *  get one actor by id.
-     *  @return the entity
-     */
-    @Transactional(readOnly = true) 
-    public Actor findOne(Long id) {
-        log.debug("Request to get Actor : {}", id);
-        Actor actor = actorRepository.findOne(id);
-        return actor;
-    }
-
-    /**
-     *  delete the  actor by id.
-     */
-    public void delete(Long id) {
-        log.debug("Request to delete Actor : {}", id);
-        actorRepository.delete(id);
-    }
+	// Other business methods -----------------------------------------------------
+	
+	
 }

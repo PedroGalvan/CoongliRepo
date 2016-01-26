@@ -1,6 +1,5 @@
 package com.coongli.domain;
 
-import java.time.LocalDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -9,6 +8,7 @@ import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -40,7 +40,7 @@ public class Mesage implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     @Column(name = "sentmoment", nullable = false)
-    private LocalDate sentmoment;
+    private Date sentmoment;
     
     @Column(name = "saw")
     private Boolean saw;
@@ -83,11 +83,11 @@ public class Mesage implements Serializable {
         this.body = body;
     }
 
-    public LocalDate getSentmoment() {
+    public Date getSentmoment() {
         return sentmoment;
     }
     
-    public void setSentmoment(LocalDate sentmoment) {
+    public void setSentmoment(Date sentmoment) {
         this.sentmoment = sentmoment;
     }
 

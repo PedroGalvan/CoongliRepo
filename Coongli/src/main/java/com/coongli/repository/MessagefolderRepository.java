@@ -1,14 +1,12 @@
 package com.coongli.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import com.coongli.domain.Messagefolder;
 
-import org.springframework.data.jpa.repository.*;
 
-import java.util.List;
-
-/**
- * Spring Data JPA repository for the Messagefolder entity.
- */
-public interface MessagefolderRepository extends JpaRepository<Messagefolder,Long> {
+@Repository
+public interface MessagefolderRepository extends JpaRepository<Messagefolder, Integer > {
 
 }

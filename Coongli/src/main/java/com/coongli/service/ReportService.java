@@ -1,83 +1,140 @@
 package com.coongli.service;
 
-import com.coongli.domain.Report;
-import com.coongli.repository.ReportRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.coongli.security.Authority;
+import com.coongli.domain.Report;
+import com.coongli.domain.Session;
+import com.coongli.domain.User;
+import com.coongli.repository.ReportRepository;
+import com.coongli.security.LoginService;
+import com.coongli.security.UserAccount;
 
-/**
- * Service Implementation for managing Report.
- */
+
 @Service
 @Transactional
 public class ReportService {
 
-    private final Logger log = LoggerFactory.getLogger(ReportService.class);
-    
-    @Inject
-    private ReportRepository reportRepository;
-    
-    /**
-     * Save a report.
-     * @return the persisted entity
-     */
-    public Report save(Report report) {
-        log.debug("Request to save Report : {}", report);
-        Report result = reportRepository.save(report);
-        return result;
-    }
+	// Managed repository -------------------------------------------------------
+	@Autowired		
+	private ReportRepository reportRepository;
+	
+	// Supporting services ------------------------------------------------------
+	
+	@Autowired		
+	private UserService userService;
+	
+	// Simpled CRUD methods -----------------------------------------------------
+	
+	public Report create(Session session){
+		Report result;
 
-    /**
-     *  get all the reports.
-     *  @return the list of entities
-     */
-    @Transactional(readOnly = true) 
-    public Page<Report> findAll(Pageable pageable) {
-        log.debug("Request to get all Reports");
-        Page<Report> result = reportRepository.findAll(pageable); 
-        return result;
-    }
+		result= new Report();
+		result.setCreationmoment(new Date(System.currentTimeMillis()-1));
+		result.setInvoicereport(true);
+		result.setSession(session);
+		return result;
+	}
+	
+	public Report save(Report report){
+		Assert.notNull(report);
+		//checkIsAdmin();
+		Report result;
+			
+		report.setCreationmoment(new Date(System.currentTimeMillis() -1));
+		
+		result = reportRepository.save(report);
+		
+		return result;
+	}
+	
+	public Report findOne(int reportId){
+		Report result;
+		
+		result  = reportRepository.findOne(reportId);
+		
+		return result;
+	}
+	
+	public Collection<Report> findAll(){
+		Collection<Report> result;
+		
+		result  = reportRepository.findAll();
+		
+		return result;
+	}
+	
+	//Other business methods ------------------------------------------------
+	
+	public Report findA(int reportId){
+		Report result;
 
-
-    /**
-     *  get all the reports where Session is null.
-     *  @return the list of entities
-     */
-    @Transactional(readOnly = true) 
-    public List<Report> findAllWhereSessionIsNull() {
-        log.debug("Request to get all reports where Session is null");
-        return StreamSupport
-            .stream(reportRepository.findAll().spliterator(), false)
-            .filter(report -> report.getSession() == null)
-            .collect(Collectors.toList());
-    }
-
-    /**
-     *  get one report by id.
-     *  @return the entity
-     */
-    @Transactional(readOnly = true) 
-    public Report findOne(Long id) {
-        log.debug("Request to get Report : {}", id);
-        Report report = reportRepository.findOne(id);
-        return report;
-    }
-
-    /**
-     *  delete the  report by id.
-     */
-    public void delete(Long id) {
-        log.debug("Request to delete Report : {}", id);
-        reportRepository.delete(id);
-    }
+		result  = reportRepository.findA(reportId);
+		
+		return result;
+	}
+	
+	public Collection<Report> findAllByUser(){
+		Collection<Report> result;
+		User user;
+		
+		user = userService.findOneByPrincipal();
+		result = reportRepository.findAllByUser(user.getId());
+		
+		return result;
+	}
+	
+	
+	public Collection<Report> findAllByKeyWord(String kw){
+		Assert.notNull(kw);
+		UserAccount principal;
+		Authority a1,a2;
+		Collection<Report> result,aux;
+		
+		a1 = new Authority();
+		a1.setAuthority("ADMIN");
+		
+		a2 = new Authority();
+		a2.setAuthority("USER");
+		principal = LoginService.getPrincipal();
+		if(principal.getAuthorities().contains(a2)){
+			if(kw.equals("")){
+				result = findAllByUser();
+			}else{
+				result = reportRepository.findAllByKeyWord(kw);
+			}
+			aux = findAllByUser();
+			aux.removeAll(result);
+			result.removeAll(aux);
+		}else if(principal.getAuthorities().contains(a1)){
+			if(kw.equals("")){
+				result = findAll();
+			}else{
+				result = reportRepository.findAllByKeyWord(kw);
+			}
+		}else{
+			result = new ArrayList<Report>();
+		}
+		
+		return result;
+	}
+	
+	public void checkIsAdmin(){
+		UserAccount principal;
+		Authority a;
+		a = new Authority();
+		a.setAuthority("ADMIN");
+		principal = LoginService.getPrincipal();			
+		
+		Assert.isTrue(principal.getAuthorities().contains(a));
+	}
+	
 }

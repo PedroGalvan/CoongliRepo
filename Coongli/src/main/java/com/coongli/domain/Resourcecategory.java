@@ -8,6 +8,8 @@ import javax.validation.constraints.*;
 import org.hibernate.validator.constraints.SafeHtml;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -40,13 +42,13 @@ public class Resourcecategory implements Serializable {
     @ManyToMany
     @JoinTable(name = "resourcecategory_users",
                joinColumns = @JoinColumn(name="resourcecategorys_id", referencedColumnName="ID"),
-               inverseJoinColumns = @JoinColumn(name="userss_id", referencedColumnName="ID"))
-    private Set<User> userss = new HashSet<>();
+               inverseJoinColumns = @JoinColumn(name="users_id", referencedColumnName="ID"))
+    private Collection<User> users = new ArrayList<>();
 
     @NotNull
     @OneToMany(mappedBy = "resourcecategory")
     @JsonIgnore
-    private Set<Resource> resourcess = new HashSet<>();
+    private Collection<Resource> resources = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -80,20 +82,20 @@ public class Resourcecategory implements Serializable {
         this.hidden = hidden;
     }
 
-    public Set<User> getUserss() {
-        return userss;
+    public Collection<User> getUsers() {
+        return users;
     }
 
-    public void setUserss(Set<User> users) {
-        this.userss = users;
+    public void setUsers(Collection<User> users) {
+        this.users = users;
     }
 
-    public Set<Resource> getResourcess() {
-        return resourcess;
+    public Collection<Resource> getResources() {
+        return resources;
     }
 
-    public void setResourcess(Set<Resource> resources) {
-        this.resourcess = resources;
+    public void setResources(Collection<Resource> resources) {
+        this.resources = resources;
     }
 
     @Override

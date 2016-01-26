@@ -1,7 +1,6 @@
 package com.coongli.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.time.LocalDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -9,6 +8,9 @@ import javax.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -28,13 +30,13 @@ public class Session implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     @Column(name = "startmoment", nullable = false)
-    private LocalDate startmoment;
+    private Date startmoment;
     
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     @Column(name = "endmoment", nullable = false)
-    private LocalDate endmoment;
+    private Date endmoment;
     
     @Column(name = "periodica")
     private Boolean periodica;
@@ -54,12 +56,12 @@ public class Session implements Serializable {
     @NotNull
     @ManyToMany(mappedBy = "sessions")
     @JsonIgnore
-    private Set<User> users = new HashSet<>();
+    private Collection<User> users = new ArrayList<>();
 
     @NotNull
     @OneToMany(mappedBy = "session")
     @JsonIgnore
-    private Set<Invitation> invitations = new HashSet<>();
+    private Collection<Invitation> invitations = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -69,19 +71,19 @@ public class Session implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getStartmoment() {
+    public Date getStartmoment() {
         return startmoment;
     }
     
-    public void setStartmoment(LocalDate startmoment) {
+    public void setStartmoment(Date startmoment) {
         this.startmoment = startmoment;
     }
 
-    public LocalDate getEndmoment() {
+    public Date getEndmoment() {
         return endmoment;
     }
     
-    public void setEndmoment(LocalDate endmoment) {
+    public void setEndmoment(Date endmoment) {
         this.endmoment = endmoment;
     }
 
@@ -125,19 +127,19 @@ public class Session implements Serializable {
         this.report = report;
     }
 
-    public Set<User> getUserss() {
+    public Collection<User> getUsers() {
         return users;
     }
 
-    public void setUserss(Set<User> users) {
+    public void setUsers(Collection<User> users) {
         this.users = users;
     }
 
-    public Set<Invitation> getInvitationss() {
+    public Collection<Invitation> getInvitations() {
         return invitations;
     }
 
-    public void setInvitationss(Set<Invitation> invitations) {
+    public void setInvitations(Collection<Invitation> invitations) {
         this.invitations = invitations;
     }
 

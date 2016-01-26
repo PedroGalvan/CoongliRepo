@@ -1,6 +1,5 @@
 package com.coongli.domain;
 
-import java.time.LocalDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,6 +9,7 @@ import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -33,7 +33,7 @@ public class Textable implements Serializable {
 	@Past
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
-    private LocalDate creationmoment;
+    private Date creationmoment;
     
     public Long getId() {
         return id;
@@ -51,12 +51,12 @@ public class Textable implements Serializable {
         this.text = text;
     }
 
-    public LocalDate getCreationMoment() {
+    public Date getCreationmoment() {
         return creationmoment;
     }
     
-    public void setCreationMoment(LocalDate creationMoment) {
-        this.creationmoment = creationMoment;
+    public void setCreationmoment(Date creationmoment) {
+        this.creationmoment = creationmoment;
     }
 
     @Override

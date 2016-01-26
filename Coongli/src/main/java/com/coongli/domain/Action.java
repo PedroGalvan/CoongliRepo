@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "action")
-public class Action implements Serializable {
+public class Action extends Textable implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

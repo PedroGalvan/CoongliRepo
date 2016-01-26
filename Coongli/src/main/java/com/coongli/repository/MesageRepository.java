@@ -1,14 +1,18 @@
 package com.coongli.repository;
 
+import java.util.Collection;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
 import com.coongli.domain.Mesage;
 
-import org.springframework.data.jpa.repository.*;
 
-import java.util.List;
-
-/**
- * Spring Data JPA repository for the Mesage entity.
- */
-public interface MesageRepository extends JpaRepository<Mesage,Long> {
-
+@Repository
+public interface MesageRepository extends JpaRepository<Mesage, Integer> {
+	
+	@Query("select m from Mesage m where m.messageFolder.id=?1 order by m.sentMoment desc")
+	Collection<Mesage> findMesageByMFOrder(int mesageFolderId);
+	
 }

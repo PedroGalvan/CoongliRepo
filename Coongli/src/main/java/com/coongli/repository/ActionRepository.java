@@ -1,17 +1,18 @@
 package com.coongli.repository;
 
+import java.util.Collection;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
 import com.coongli.domain.Action;
 
-import org.springframework.data.jpa.repository.*;
 
-import java.util.List;
+@Repository
+public interface ActionRepository extends JpaRepository<Action, Integer > {
 
-/**
- * Spring Data JPA repository for the Action entity.
- */
-public interface ActionRepository extends JpaRepository<Action,Long> {
-
-    @Query("select action from Action action where action.user.login = ?#{principal.username}")
-    List<Action> findByUserIsCurrentUser();
-
+	@Query("select a from Action a where a.user.id=?1 order by a.creationMoment desc")
+	Collection<Action> findByOrder(long userId);
+	
 }

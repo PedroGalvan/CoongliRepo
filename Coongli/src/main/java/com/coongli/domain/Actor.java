@@ -1,5 +1,6 @@
 package com.coongli.domain;
 
+import com.coongli.security.UserAccount;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -9,6 +10,8 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.SafeHtml;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -46,17 +49,25 @@ public class Actor extends AbstractAuditingEntity implements Serializable {
     @Column(name = "phone", nullable = false)
     private String phone;
     
+    @NotNull
     @OneToMany(mappedBy = "actor")
     @JsonIgnore
-    private Set<Messagefolder> messagefolders = new HashSet<>();
+    private Collection<Messagefolder> messagefolders = new ArrayList<>();
 
+    @NotNull
     @OneToMany(mappedBy = "sender")
     @JsonIgnore
-    private Set<Mesage> sentMesages = new HashSet<>();
+    private Collection<Mesage> sentmesages = new ArrayList<>();
 
+    @NotNull
     @OneToMany(mappedBy = "recipient")
     @JsonIgnore
-    private Set<Mesage> receivedMesages = new HashSet<>();
+    private Collection<Mesage> receivedmesages = new ArrayList<>();
+    
+    @NotNull
+    @OneToOne
+    @JsonIgnore
+    private UserAccount useraccount;
 
     public Long getId() {
         return id;
@@ -98,28 +109,36 @@ public class Actor extends AbstractAuditingEntity implements Serializable {
         this.phone = phone;
     }
 
-    public Set<Messagefolder> getMessagefolderss() {
+    public Collection<Messagefolder> getMessagefolders() {
         return messagefolders;
     }
 
-    public void setMessagefolderss(Set<Messagefolder> messagefolders) {
+    public void setMessagefolders(Collection<Messagefolder> messagefolders) {
         this.messagefolders = messagefolders;
     }
 
-    public Set<Mesage> getSentMesagess() {
-        return sentMesages;
+    public Collection<Mesage> getSentmesages() {
+        return sentmesages;
     }
 
-    public void setSentMesagess(Set<Mesage> mesages) {
-        this.sentMesages = mesages;
+    public void setSentmesages(Collection<Mesage> mesages) {
+        this.sentmesages = mesages;
     }
 
-    public Set<Mesage> getReceivedMesagess() {
-        return receivedMesages;
+    public Collection<Mesage> getReceivedmesages() {
+        return receivedmesages;
     }
 
-    public void setReceivedMesagess(Set<Mesage> mesages) {
-        this.receivedMesages = mesages;
+    public void setReceivedmesages(Collection<Mesage> mesages) {
+        this.receivedmesages = mesages;
+    }
+    
+    public UserAccount getUserAccount() {
+        return useraccount;
+    }
+
+    public void setUserAccount(UserAccount useraccount) {
+        this.useraccount = useraccount;
     }
 
     @Override
