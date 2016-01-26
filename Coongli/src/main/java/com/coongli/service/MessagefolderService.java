@@ -3,6 +3,7 @@ package com.coongli.service;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class MessagefolderService {
 	
 	//Managed repository -----------------------------------------------------
 	
-	@Autowired
+	@Inject
 	private MessagefolderRepository messageFolderRepository;
 	
 	// Supporting services -----------------------------------------------------

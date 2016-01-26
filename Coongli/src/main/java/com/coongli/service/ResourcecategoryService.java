@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +28,16 @@ public class ResourcecategoryService {
 
 	// Managed repository
 	// -------------------------------------------------------
-	@Autowired
+	@Inject
 	private ResourcecategoryRepository resourceCategoryRepository;
 
 	// Supporting services
 	// ------------------------------------------------------
 
-	@Autowired
+	@Inject
 	ResourceService resourceService;
 
-	@Autowired
+	@Inject
 	AdminisService adminService;
 
 	// Simpled CRUD methods

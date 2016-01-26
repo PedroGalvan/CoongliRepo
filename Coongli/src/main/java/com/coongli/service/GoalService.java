@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,12 @@ public class GoalService {
 
 	// Managed repository -------------------------------------------------------
 	
-	@Autowired		
+	@Inject		
 	private GoalRepository goalRepository;
 	
 	// Supporting services ------------------------------------------------------
 	
-	@Autowired
+	@Inject
 	private UserService userService;
 	
 	// Simpled CRUD methods -----------------------------------------------------

@@ -2,6 +2,7 @@ package com.coongli.service;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class ActorService {
 	
 	//Managed repository -----------------------------------------------------
 	
-	@Autowired
+	@Inject
 	private ActorRepository actorRepository;
 	
 	// Supporting services -----------------------------------------------------

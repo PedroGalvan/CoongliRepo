@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,12 @@ import com.coongli.security.UserAccount;
 public class InvoiceService {
 
 	// Managed repository -------------------------------------------------------
-	@Autowired		
+	@Inject		
 	private InvoiceRepository invoiceRepository;
 	
 	// Supporting services ------------------------------------------------------
 	
-	@Autowired
+	@Inject
 	private UserService userService;
 	
 	// Simpled CRUD methods -----------------------------------------------------

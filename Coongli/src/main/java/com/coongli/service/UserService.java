@@ -52,7 +52,7 @@ public class UserService {
 
  	// Supporting services
  	// ------------------------------------------------------
- 	@Autowired
+ 	@Inject
  	private MessagefolderService messageFolderService;
 
     

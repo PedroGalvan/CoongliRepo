@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,14 @@ import com.coongli.security.UserAccount;
 public class MesageService {
 
 	// Managed repository -------------------------------------------------------
-	@Autowired		
+	@Inject		
 	private MesageRepository mesageRepository;
 	
 	// Supporting services ------------------------------------------------------
-	@Autowired
+	@Inject
 	private ActorService actorService;
 
-	@Autowired
+	@Inject
 	private MessagefolderService messageFolderService;
 	
 	// Simpled CRUD methods -----------------------------------------------------

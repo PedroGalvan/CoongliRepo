@@ -3,6 +3,7 @@ package com.coongli.service;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,12 @@ public class AdminisService {
 
 	//Managed repository -----------------------------------------------------
 	
-	@Autowired
+	@Inject
 	private AdminisRepository adminRepository;
 	
 	// Supporting services -----------------------------------------------------
 
-	@Autowired		
+	@Inject		
 	private MessagefolderService messageFolderService;
 	// Constructor -----------------------------------------------------
 	

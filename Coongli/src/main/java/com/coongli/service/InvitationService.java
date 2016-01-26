@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +25,15 @@ import com.coongli.security.UserAccount;
 public class InvitationService {
 
 	// Managed repository -------------------------------------------------------
-	@Autowired		
+	@Inject		
 	private InvitationRepository invitationRepository;
 	
 	// Supporting services ------------------------------------------------------
 	
-	@Autowired
+	@Inject
 	private UserService userService;
 	
-	@Autowired
+	@Inject
 	private SessionService sessionService;
 	
 	// Simpled CRUD methods -----------------------------------------------------

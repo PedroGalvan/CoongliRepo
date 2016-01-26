@@ -3,6 +3,7 @@ package com.coongli.service;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +25,15 @@ import com.coongli.security.UserAccount;
 public class ActionplanService {
 
 	// Managed repository -------------------------------------------------------
-	@Autowired		
+	@Inject		
 	private ActionplanRepository actionPlanRepository;
 	
 	// Supporting services ------------------------------------------------------
 	
-	@Autowired		
+	@Inject		
 	private UserService userService;
 	
-	@Autowired		
+	@Inject		
 	private ResourcecategoryService resourceCategoryService;
 	
 	// Simpled CRUD methods -----------------------------------------------------
