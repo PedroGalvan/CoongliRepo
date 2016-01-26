@@ -1,0 +1,32 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "actor",
+            "otherEntityName": "actor",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "mesages",
+            "otherEntityName": "mesage",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "messagefolder"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160125171837",
+    "dto": "no",
+    "service": "serviceClass",
+    "pagination": "pager"
+}

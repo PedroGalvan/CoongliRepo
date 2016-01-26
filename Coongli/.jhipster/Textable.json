@@ -1,0 +1,21 @@
+{
+    "relationships": [],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "text",
+            "fieldType": "String",
+            "fieldValidateRules": []
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "creationMoment",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": []
+        }
+    ],
+    "changelogDate": "20160125170014",
+    "dto": "no",
+    "service": "serviceClass",
+    "pagination": "pager"
+}

@@ -1,0 +1,86 @@
+
+<div>
+    <h2><span>Invitation</span> {{invitation.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <span>Body</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{invitation.body}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Subject</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{invitation.subject}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Accepted</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{invitation.accepted}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Rejected</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{invitation.rejected}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Creationmoment</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{invitation.creationmoment | date:'mediumDate'}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>sender</span>
+                </td>
+                <td>
+                    {{invitation.sender.id}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>recipient</span>
+                </td>
+                <td>
+                    {{invitation.recipient.id}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>session</span>
+                </td>
+                <td>
+                    <a class="form-control-static" ui-sref="session.detail({id:invitation.session.id})">{{invitation.session.id}}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+</div>

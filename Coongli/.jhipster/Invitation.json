@@ -1,0 +1,65 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "sender",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "recipient",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipId": 3,
+            "relationshipName": "session",
+            "otherEntityName": "session",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "body",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "subject",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "accepted",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "rejected",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldId": 5,
+            "fieldName": "creationmoment",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160126153533",
+    "dto": "no",
+    "service": "serviceClass",
+    "pagination": "pager"
+}

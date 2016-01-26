@@ -1,0 +1,69 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "messagefolders",
+            "otherEntityName": "messagefolder",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "actor"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "sentMesages",
+            "otherEntityName": "mesage",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "actor"
+        },
+        {
+            "relationshipId": 3,
+            "relationshipName": "receivedMesages",
+            "otherEntityName": "mesage",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "recipient"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "surname",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "email",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "pattern"
+            ],
+            "fieldValidateRulesPattern": "^[a-zA-Z0-9]*$",
+            "fieldValidateRulesPatternJava": "^[a-zA-Z0-9]*$"
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "phone",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "pattern"
+            ],
+            "fieldValidateRulesPattern": "[0-9]{9}",
+            "fieldValidateRulesPatternJava": "[0-9]{9}"
+        }
+    ],
+    "changelogDate": "20160126154308",
+    "dto": "no",
+    "service": "serviceClass",
+    "pagination": "pager"
+}

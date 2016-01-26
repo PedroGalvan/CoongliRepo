@@ -1,0 +1,84 @@
+
+<form name="editForm" role="form" novalidate ng-submit="save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="clear()">&times;</button>
+        <h4 class="modal-title" id="mySessionLabel">Create or edit a Session</h4>
+    </div>
+    <div class="modal-body">
+        <jh-alert-error></jh-alert-error>
+        <div class="form-group">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="session.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_startmoment">Startmoment</label>
+            <input id="field_startmoment" type="text" class="form-control" uib-datepicker-popup="{{dateformat}}" ng-model="session.startmoment" is-open="datePickerForStartmoment.status.opened"
+            required/>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="datePickerForStartmomentOpen($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+            <div ng-show="editForm.startmoment.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.startmoment.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_endmoment">Endmoment</label>
+            <input id="field_endmoment" type="text" class="form-control" uib-datepicker-popup="{{dateformat}}" ng-model="session.endmoment" is-open="datePickerForEndmoment.status.opened"
+            required/>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="datePickerForEndmomentOpen($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+            <div ng-show="editForm.endmoment.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.endmoment.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_periodica">Periodica</label>
+            <input type="checkbox" class="form-control" name="periodica" id="field_periodica"
+                    ng-model="session.periodica"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_hidden">Hidden</label>
+            <input type="checkbox" class="form-control" name="hidden" id="field_hidden"
+                    ng-model="session.hidden"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_accepted">Accepted</label>
+            <input type="checkbox" class="form-control" name="accepted" id="field_accepted"
+                    ng-model="session.accepted"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_cancelled">Cancelled</label>
+            <input type="checkbox" class="form-control" name="cancelled" id="field_cancelled"
+                    ng-model="session.cancelled"
+                     />
+        </div>
+
+        <div class="form-group">
+            <label for="field_report">report</label>
+            <select class="form-control" id="field_report" name="report" ng-model="session.report" ng-options="report as report.id for report in reports | orderBy:'id' track by report.id">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

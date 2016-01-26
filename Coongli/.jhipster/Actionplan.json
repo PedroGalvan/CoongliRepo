@@ -1,0 +1,17 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "owner",
+            "otherEntityName": "user",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20160126154816",
+    "dto": "no",
+    "service": "serviceClass",
+    "pagination": "pager"
+}

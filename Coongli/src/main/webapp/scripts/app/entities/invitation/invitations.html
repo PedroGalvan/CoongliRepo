@@ -1,0 +1,77 @@
+<div>
+    <h2>Invitations</h2>
+    <jh-alert></jh-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="invitation.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span 
+                       >Create new Invitation
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr jh-sort="predicate" ascending="reverse" callback="loadAll()">
+                    <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="body"><span>Body</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="subject"><span>Subject</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="accepted"><span>Accepted</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="rejected"><span>Rejected</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="creationmoment"><span>Creationmoment</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="sender.id"><span>sender</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="recipient.id"><span>recipient</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="session.id"><span>session</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="invitation in invitations track by invitation.id">
+                    <td><a ui-sref="invitation.detail({id:invitation.id})">{{invitation.id}}</a></td>
+                    <td>{{invitation.body}}</td>
+                    <td>{{invitation.subject}}</td>
+                    <td>{{invitation.accepted}}</td>
+                    <td>{{invitation.rejected}}</td>
+                        <td>{{invitation.creationmoment | date:'mediumDate'}}</td>
+                    <td>
+                        {{invitation.sender.id}}
+                    </td>
+                    <td>
+                        {{invitation.recipient.id}}
+                    </td>
+                    <td>
+                        <a ui-sref="session.detail({id:invitation.session.id})">{{invitation.session.id}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="invitation.detail({id:invitation.id})"
+                                    class="btn btn-info btn-sm"> 
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="invitation.edit({id:invitation.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="invitation.delete({id:invitation.id})"
+                                    class="btn btn-danger btn-sm">                                    
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <uib-pager total-items="totalItems" ng-model="page" ng-change="loadAll()"></uib-pager>
+</div>

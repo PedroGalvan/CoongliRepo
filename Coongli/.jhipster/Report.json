@@ -1,0 +1,17 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "session",
+            "otherEntityName": "session",
+            "relationshipType": "one-to-one",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "report"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20160125171451",
+    "dto": "no",
+    "service": "serviceClass",
+    "pagination": "pager"
+}

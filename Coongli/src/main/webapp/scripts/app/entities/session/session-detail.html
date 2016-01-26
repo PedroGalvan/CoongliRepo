@@ -1,0 +1,78 @@
+
+<div>
+    <h2><span>Session</span> {{session.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <span>Startmoment</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{session.startmoment | date:'mediumDate'}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Endmoment</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{session.endmoment | date:'mediumDate'}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Periodica</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{session.periodica}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Hidden</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{session.hidden}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Accepted</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{session.accepted}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Cancelled</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{session.cancelled}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>report</span>
+                </td>
+                <td>
+                    <a class="form-control-static" ui-sref="report.detail({id:session.report.id})">{{session.report.id}}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+</div>

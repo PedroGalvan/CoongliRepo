@@ -1,0 +1,70 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "report",
+            "otherEntityName": "report",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "session"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "users",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "sessions"
+        },
+        {
+            "relationshipId": 3,
+            "relationshipName": "invitations",
+            "otherEntityName": "invitation",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "session"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "startmoment",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "endmoment",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "periodica",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "hidden",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldId": 5,
+            "fieldName": "accepted",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldId": 6,
+            "fieldName": "cancelled",
+            "fieldType": "Boolean"
+        }
+    ],
+    "changelogDate": "20160126153023",
+    "dto": "no",
+    "service": "serviceClass",
+    "pagination": "pager"
+}

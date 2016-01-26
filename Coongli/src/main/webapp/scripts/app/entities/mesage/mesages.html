@@ -1,0 +1,75 @@
+<div>
+    <h2>Mesages</h2>
+    <jh-alert></jh-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="mesage.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span 
+                       >Create new Mesage
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr jh-sort="predicate" ascending="reverse" callback="loadAll()">
+                    <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="subject"><span>Subject</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="body"><span>Body</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="sentmoment"><span>Sentmoment</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="saw"><span>Saw</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="sender.id"><span>sender</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="recipient.id"><span>recipient</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="messagefolder.id"><span>messagefolder</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="mesage in mesages track by mesage.id">
+                    <td><a ui-sref="mesage.detail({id:mesage.id})">{{mesage.id}}</a></td>
+                    <td>{{mesage.subject}}</td>
+                    <td>{{mesage.body}}</td>
+                        <td>{{mesage.sentmoment | date:'mediumDate'}}</td>
+                    <td>{{mesage.saw}}</td>
+                    <td>
+                        <a ui-sref="actor.detail({id:mesage.sender.id})">{{mesage.sender.id}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="actor.detail({id:mesage.recipient.id})">{{mesage.recipient.id}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="messagefolder.detail({id:mesage.messagefolder.id})">{{mesage.messagefolder.id}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="mesage.detail({id:mesage.id})"
+                                    class="btn btn-info btn-sm"> 
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="mesage.edit({id:mesage.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="mesage.delete({id:mesage.id})"
+                                    class="btn btn-danger btn-sm">                                    
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <uib-pager total-items="totalItems" ng-model="page" ng-change="loadAll()"></uib-pager>
+</div>

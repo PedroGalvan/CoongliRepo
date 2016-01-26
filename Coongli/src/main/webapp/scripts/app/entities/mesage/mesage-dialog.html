@@ -1,0 +1,88 @@
+
+<form name="editForm" role="form" novalidate ng-submit="save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="clear()">&times;</button>
+        <h4 class="modal-title" id="myMesageLabel">Create or edit a Mesage</h4>
+    </div>
+    <div class="modal-body">
+        <jh-alert-error></jh-alert-error>
+        <div class="form-group">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="mesage.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_subject">Subject</label>
+            <input type="text" class="form-control" name="subject" id="field_subject"
+                    ng-model="mesage.subject"
+                    required />
+            <div ng-show="editForm.subject.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.subject.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_body">Body</label>
+            <input type="text" class="form-control" name="body" id="field_body"
+                    ng-model="mesage.body"
+                    required />
+            <div ng-show="editForm.body.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.body.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_sentmoment">Sentmoment</label>
+            <input id="field_sentmoment" type="text" class="form-control" uib-datepicker-popup="{{dateformat}}" ng-model="mesage.sentmoment" is-open="datePickerForSentmoment.status.opened"
+            required/>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="datePickerForSentmomentOpen($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+            <div ng-show="editForm.sentmoment.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.sentmoment.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_saw">Saw</label>
+            <input type="checkbox" class="form-control" name="saw" id="field_saw"
+                    ng-model="mesage.saw"
+                     />
+        </div>
+
+        <div class="form-group">
+            <label for="field_sender">sender</label>
+            <select class="form-control" id="field_sender" name="sender" ng-model="mesage.sender" ng-options="actor as actor.id for actor in actors track by actor.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="field_recipient">recipient</label>
+            <select class="form-control" id="field_recipient" name="recipient" ng-model="mesage.recipient" ng-options="actor as actor.id for actor in actors track by actor.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="field_messagefolder">messagefolder</label>
+            <select class="form-control" id="field_messagefolder" name="messagefolder" ng-model="mesage.messagefolder" ng-options="messagefolder as messagefolder.id for messagefolder in messagefolders track by messagefolder.id">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

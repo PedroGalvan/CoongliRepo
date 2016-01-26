@@ -1,0 +1,24 @@
+{
+  "generator-jhipster": {
+    "baseName": "Coongli",
+    "packageName": "com.coongli",
+    "packageFolder": "com/coongli",
+    "authenticationType": "session",
+    "hibernateCache": "no",
+    "clusteredHttpSession": "no",
+    "websocket": "no",
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": "no",
+    "useSass": false,
+    "buildTool": "maven",
+    "frontendBuilder": "grunt",
+    "enableTranslation": false,
+    "enableSocialSignIn": false,
+    "rememberMeKey": "6035b152a701132b3c6f128516b3135572bbe922",
+    "testFrameworks": [
+      "gatling"
+    ]
+  }
+}

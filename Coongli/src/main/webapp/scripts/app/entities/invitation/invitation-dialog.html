@@ -1,0 +1,94 @@
+
+<form name="editForm" role="form" novalidate ng-submit="save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="clear()">&times;</button>
+        <h4 class="modal-title" id="myInvitationLabel">Create or edit a Invitation</h4>
+    </div>
+    <div class="modal-body">
+        <jh-alert-error></jh-alert-error>
+        <div class="form-group">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="invitation.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_body">Body</label>
+            <input type="text" class="form-control" name="body" id="field_body"
+                    ng-model="invitation.body"
+                    required />
+            <div ng-show="editForm.body.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.body.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_subject">Subject</label>
+            <input type="text" class="form-control" name="subject" id="field_subject"
+                    ng-model="invitation.subject"
+                    required />
+            <div ng-show="editForm.subject.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.subject.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_accepted">Accepted</label>
+            <input type="checkbox" class="form-control" name="accepted" id="field_accepted"
+                    ng-model="invitation.accepted"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_rejected">Rejected</label>
+            <input type="checkbox" class="form-control" name="rejected" id="field_rejected"
+                    ng-model="invitation.rejected"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_creationmoment">Creationmoment</label>
+            <input id="field_creationmoment" type="text" class="form-control" uib-datepicker-popup="{{dateformat}}" ng-model="invitation.creationmoment" is-open="datePickerForCreationmoment.status.opened"
+            required/>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="datePickerForCreationmomentOpen($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+            <div ng-show="editForm.creationmoment.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.creationmoment.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="field_sender">sender</label>
+            <select class="form-control" id="field_sender" name="sender" ng-model="invitation.sender" ng-options="user as user.id for user in users track by user.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="field_recipient">recipient</label>
+            <select class="form-control" id="field_recipient" name="recipient" ng-model="invitation.recipient" ng-options="user as user.id for user in users track by user.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="field_session">session</label>
+            <select class="form-control" id="field_session" name="session" ng-model="invitation.session" ng-options="session as session.id for session in sessions track by session.id">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>
